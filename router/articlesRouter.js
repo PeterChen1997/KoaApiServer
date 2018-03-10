@@ -45,10 +45,11 @@ articlesRouter.get('/', async (ctx, next) => {
   ctx.response.body = await articlesController.getAll()
 })
 
-// 根据id获取article
+// 根据id获取article，访问量+1
 articlesRouter.get('/:id', async (ctx, next) => {
   let { id } = ctx.params
   console.log('要查找的文章ID为' + id)
+  articlesController.addArticleViewCount(id)
   ctx.response.body = await articlesController.findArticle(id)
 })
 

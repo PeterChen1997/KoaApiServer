@@ -7,7 +7,7 @@ const usersRouter = require('./usersRouter')
 module.exports = (app) => {
 
   const rootRouter = new Router({
-    prefix: '/v1'
+    prefix: '/api'
   })
 
   rootRouter.use(articlesRouter.routes(),usersRouter.routes())

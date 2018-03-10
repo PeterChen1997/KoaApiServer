@@ -26,6 +26,11 @@ const Articles = sequelize.define('articles', {
     type: SeqStandard.STRING,
     field: 'desc',
     defaultValue: 'write'
+  },
+  view: {
+    type: SeqStandard.INTEGER,
+    field: 'view',
+    defaultValue: 0
   }
 }, {
   // 如果为 true 则表的名称和 model 相同，即 user
@@ -39,6 +44,9 @@ const Articles = sequelize.define('articles', {
 // 如果 force = true 则会把存在的表（如果users表已存在）先销毁再创建表
 // 默认情况下 force = false
 //申请项目表数据库
+Articles.sync({
+  force: false  
+})
 
 
 module.exports = Articles

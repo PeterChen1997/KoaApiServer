@@ -49,10 +49,26 @@ const deleteArticle = function (id) {
   })
 }
 
+// 增加文章浏览量
+
+const addArticleViewCount = async (id) => {
+  let article = await Articles.findOne({
+    where: {
+      id
+    }
+  })
+  return Articles.update({ view: article.view + 1}, {
+    where: {
+      id
+    }
+  })
+}
+
 module.exports = {
   getAll,
   addArticle,
   deleteArticle,
   findArticle,
-  editArticle
+  editArticle,
+  addArticleViewCount
 }
