@@ -14,7 +14,6 @@ COPY . .
 EXPOSE 3000
 CMD [ "npm", "start" ]
 
-
 # # Install global pm2 
 # RUN npm install pm2 -g --registry=https://registry.npm.taobao.org
 
