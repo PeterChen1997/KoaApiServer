@@ -22,8 +22,8 @@ articlesRouter.post('/',async(ctx, next)=>{
 })
 
 // 删除article
-articlesRouter.delete('/',async(ctx, next)=>{
-  let { id } = ctx.request.body
+articlesRouter.delete('/:id',async(ctx, next)=>{
+  let { id } = ctx.params
   console.log('删除文章ID为' + id)
   
   let result = await articlesController.deleteArticle(id)
