@@ -41,12 +41,16 @@ articlesRouter.patch('/',async(ctx, next)=>{
 
 // 获取所有articles
 articlesRouter.get('/', async (ctx, next) => {
-  console.log('获取所有文章')
   ctx.response.body = await articlesController.getAll()
+})
+articlesRouter.get('/:index', async (ctx, next) => {
+  console.log('获取所有文章')
+  let { index } = ctx.params
+  ctx.response.body = await articlesController.getArticles(index, 5)
 })
 
 // 根据id获取article，访问量+1
-articlesRouter.get('/:id', async (ctx, next) => {
+articlesRouter.get('/detail/:id', async (ctx, next) => {
   let { id } = ctx.params
   console.log('要查找的文章ID为' + id)
   articlesController.addArticleViewCount(id)
