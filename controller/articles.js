@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize')
+
 const Articles = require('../model/articles')
 
 // 添加新用户
@@ -12,7 +14,6 @@ const addArticle = (data) => {
     title: data.title,
     desc: data.desc,
     topic: data.topic,
-    date: data.date,
     content: data.content
   })
 }
@@ -27,10 +28,10 @@ const findArticle = function (id) {
 }
 
 // 修改文章
-const editArticle = function (data) {
+const editArticle = function (data, id) {
   return Articles.update(data, {
     where: {
-      id: data.id
+      id
     }
   })
 }
@@ -58,7 +59,6 @@ const deleteArticle = function (id) {
 }
 
 // 增加文章浏览量
-
 const addArticleViewCount = async (id) => {
   let article = await Articles.findOne({
     where: {
@@ -74,6 +74,39 @@ const addArticleViewCount = async (id) => {
   })
 }
 
+// 模糊查询
+const fuzzyQuery = async (info, page, pageSize) => {
+  return Articles.findAndCountAll({
+    where: {
+      [Sequelize.Op.or]: [
+        {
+          title: {
+            [Sequelize.Op.like]: `%${info}%`
+          }
+        },
+        {
+          content: {
+            [Sequelize.Op.like]: `%${info}%`
+          }
+        },
+        {
+          topic: {
+            [Sequelize.Op.like]: `%${info}%`
+          }
+        },
+        {
+          createdAt: {
+            [Sequelize.Op.like]: `%${info}%`
+          }
+        },
+      ]
+    },
+    offset: (page - 1) * pageSize, //开始的数据索引，比如当page=2 时offset=10 ，而pagesize我们定义为10，则现在为索引为10，也就是从第11条开始返回数据条目
+    limit: pageSize, //每页限制返回的数据条数
+    order: [['createdAt', 'DESC']]
+  })
+}
+
 module.exports = {
   getAll,
   getArticles,
@@ -81,5 +114,6 @@ module.exports = {
   deleteArticle,
   findArticle,
   editArticle,
-  addArticleViewCount
+  addArticleViewCount,
+  fuzzyQuery
 }

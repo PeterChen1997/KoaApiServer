@@ -31,11 +31,12 @@ articlesRouter.delete('/:id',async(ctx, next)=>{
 })
 
 // 修改article
-articlesRouter.patch('/',async(ctx, next)=>{
+articlesRouter.patch('/:id',async(ctx, next)=>{
+  let { id } = ctx.params
   let data = {
     ...ctx.request.body
   }
-  let result = [...await articlesController.editArticle(data)]
+  let result = [...await articlesController.editArticle(data, id)]
   ctx.response.body = result === 0 ? 'error' : 'success'
 })
 
@@ -55,6 +56,20 @@ articlesRouter.get('/detail/:id', async (ctx, next) => {
   console.log('要查找的文章ID为' + id)
   articlesController.addArticleViewCount(id)
   ctx.response.body = await articlesController.findArticle(id)
+})
+
+// 根据内容搜索文章
+articlesRouter.get('/search/:info/:index', async (ctx, next) => {
+  let { info, index } = ctx.params
+  console.log('要查找的文章内容为' + info)
+  
+  if(index !== '0') {
+    ctx.response.body = await articlesController.fuzzyQuery(info, index, 5)
+  } else {
+    ctx.response.body = {
+      data: {}
+    }
+  }
 })
 
 module.exports = articlesRouter
