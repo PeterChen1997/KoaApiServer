@@ -49,6 +49,14 @@ const getArticles = function (page, pageSize) {
   })
 }
 
+// 根据浏览量查询
+const getArticlesByType = (type, index) => {
+  return Articles.findAll({
+    limit: parseInt(index), //每页限制返回的数据条数
+    order: [[`${type}`, 'DESC']]
+  })
+}
+
 // 删除制定文章
 const deleteArticle = function (id) {
   return Articles.destroy({
@@ -115,5 +123,6 @@ module.exports = {
   findArticle,
   editArticle,
   addArticleViewCount,
-  fuzzyQuery
+  fuzzyQuery,
+  getArticlesByType,
 }

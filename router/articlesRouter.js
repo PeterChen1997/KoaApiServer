@@ -44,18 +44,39 @@ articlesRouter.patch('/:id',async(ctx, next)=>{
 articlesRouter.get('/', async (ctx, next) => {
   ctx.response.body = await articlesController.getAll()
 })
-articlesRouter.get('/:index', async (ctx, next) => {
+articlesRouter.get('/page/:index', async (ctx, next) => {
   console.log('获取所有文章')
   let { index } = ctx.params
   ctx.response.body = await articlesController.getArticles(index, 5)
 })
 
+// 获取所有的Tags
+articlesRouter.get('/tags', async (ctx, next) => {
+  console.log('获取所有文章Tags')
+  const articles = await articlesController.getAll()
+  let resultArr = articles.reduce((arr, article) => {
+    article.topic.split("-").map(tag => {
+      if(arr.indexOf(tag) === -1) {
+        arr.push(tag)
+      }
+    })
+    return arr
+  }, [])
+  ctx.response.body = resultArr
+})
+
 // 根据id获取article，访问量+1
-articlesRouter.get('/detail/:id', async (ctx, next) => {
+articlesRouter.get('/:id', async (ctx, next) => {
   let { id } = ctx.params
   console.log('要查找的文章ID为' + id)
   articlesController.addArticleViewCount(id)
   ctx.response.body = await articlesController.findArticle(id)
+})
+
+// 根据浏览量获取article
+articlesRouter.get('/:type/:index', async (ctx, next) => {
+  let { type, index } = ctx.params
+  ctx.response.body = await articlesController.getArticlesByType(type, index)
 })
 
 // 根据内容搜索文章
