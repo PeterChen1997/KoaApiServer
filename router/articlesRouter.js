@@ -118,7 +118,8 @@ articlesRouter.get('/tags', async (ctx, next) => {
 articlesRouter.get('/:id', async (ctx, next) => {
   let { id } = ctx.params
   console.log('要查找的文章ID为' + id)
-
+  
+  articlesController.addArticleViewCount(id)
   // get from redis
   const redisRes = await getAsync(`/${id}`)
     if (redisRes && redisRes !== {}) {
@@ -126,7 +127,6 @@ articlesRouter.get('/:id', async (ctx, next) => {
     return
   }
 
-  articlesController.addArticleViewCount(id)
   const queryResult = await articlesController.findArticle(id)
 
   ctx.response.body = queryResult
